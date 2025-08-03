@@ -107,7 +107,7 @@ def upDataBarSpread(instrument:Instrument)->bool:
 
     if bar:
         # print(now , bar.updated_at, timedelta(hours=1))
-        if now - bar.updated_at >= timedelta(hours=1):
+        if now - bar.created_at >= timedelta(hours=1):
             open = (jsonPrices['askPrice'] + jsonPrices['bidPrice']) / 2
             BarSpread.objects.create(symbol_id=instrument.id,
                                         per="1h",
@@ -122,6 +122,8 @@ def upDataBarSpread(instrument:Instrument)->bool:
 
           if bar.low > jsonPrices['askPrice']:
               bar.low = jsonPrices['askPrice']
+
+          bar.save()
 
     else:
         open = (jsonPrices['askPrice'] + jsonPrices['bidPrice']) / 2
