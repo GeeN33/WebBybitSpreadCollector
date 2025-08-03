@@ -10,4 +10,5 @@ def up_Data_Instrument():
 
 @shared_task
 def up_Data_Bar_Spread_Start():
-    upDataBarSpreadStart()
+    res = upDataBarSpreadStart()
+    return res

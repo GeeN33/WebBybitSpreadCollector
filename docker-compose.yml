@@ -16,7 +16,7 @@ services:
     build: .
     container_name: celery-beat
     restart: always
-    command: celery -A core beat -l INFO
+    command: celery -A core beat
     volumes:
       - .:/usr/src/app/
     depends_on:
@@ -30,7 +30,7 @@ services:
     build: .
     container_name: celery-worker
     restart: always
-    command: celery -A core worker -l INFO
+    command: celery -A core worker
     volumes:
       - .:/usr/src/app/
     depends_on:
