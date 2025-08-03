@@ -1,0 +1,55 @@
+services:
+
+  web:
+    build:
+      context: .
+    container_name: Web-Bybit-Spread-Collector
+    restart: always
+    command: gunicorn core.wsgi:application --workers 4 --threads 2 --bind 0.0.0.0:8535
+    ports:
+      - 8535:8535
+    networks:
+      - pari-scalp-network
+      - spread-collector
+
+  celery_beat:
+    build: .
+    container_name: celery-beat
+    restart: always
+    command: celery -A core beat -l INFO
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - web
+      - redis
+    networks:
+      - pari-scalp-network
+      - spread-collector
+
+  celery_worker:
+    build: .
+    container_name: celery-worker
+    restart: always
+    command: celery -A core worker -l INFO
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - web
+      - redis
+    networks:
+      - pari-scalp-network
+      - spread-collector
+
+  redis:
+    image: redis:alpine
+    restart: always
+    container_name: redis-spread-collector
+    networks:
+      - spread-collector
+
+
+networks:
+  pari-scalp-network:
+    external: true
+  spread-collector:
+    name: spread-collector

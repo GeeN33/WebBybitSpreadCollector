@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from collector.models import Instrument, BarSpread
+
+admin.site.register(Instrument)
+
+admin.site.register(BarSpread)

@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework.generics import ListAPIView
 
-# Create your views here.
+from collector.models import BarSpread
+from collector.serializers import BarSpreadSerializer
+
+class GetBarSpreadListAPIView(ListAPIView):
+    serializer_class = BarSpreadSerializer
+
+    def get_queryset(self):
+        symbol = self.kwargs.get('symbol')
+        return BarSpread.objects.filter(symbol__symbol=symbol)

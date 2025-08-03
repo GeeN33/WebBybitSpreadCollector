@@ -11,13 +11,12 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)emqgovopuyk_8)pw#jejemhs=0)^93d8j&9e6^ai2!resuy0l'
+SECRET_KEY =  env('SECRET_KEY', default='')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -28,6 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_celery_beat',
+    'django_celery_results',
+    'collector',
 ]
 
 MIDDLEWARE = [
@@ -60,31 +63,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
-    }
-}
-
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DB', default=''),
+        'USER': env('POSTGRES_USER', default=''),
+        'PASSWORD': env('POSTGRES_PASSWORD', default=''),
+        'HOST': env('POSTGRES_HOST', default=''),
+        'PORT': env('POSTGRES_PORT', default='')
     }
 }
 
 
-if os.path.exists(str(BASE_DIR / ".env")):
-    redis_host = env('REDIS_HOST', default='redis')
-    redis_port = env('REDIS_PORT', default=6378)
-else:
-    redis_host = 'redis'
-    redis_port = 6379
+
+redis_host = env('REDIS_HOST', default='redis')
+redis_port = env('REDIS_PORT', default=6379)
+
 
 
 CELERY_BROKER_URL = f"redis://{redis_host}:{redis_port}/0"
@@ -150,7 +155,8 @@ STATICFILES_DIRS = [STATIC_DIR]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8535",]
+    "http://localhost:8535",
+    "http://147.45.212.47:8535",]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
