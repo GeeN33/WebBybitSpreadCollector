@@ -10,6 +10,7 @@ urlpatterns = [
     path('', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
     path('collector/', include('collector.urls')),
+    path('binans/', include('binans.urls')),
 ]
 
 if settings.DEBUG:
