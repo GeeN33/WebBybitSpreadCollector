@@ -8,8 +8,8 @@ class GetBinansBarSpreadListAPIView(ListAPIView):
     serializer_class = BarSpreadBinansSerializer
 
     def get_queryset(self):
-        symbol1 = self.kwargs.get('symbol1')
-        symbol2 = self.kwargs.get('symbol2')
+        symbol1 = self.request.query_params.get('symbol1', '')
+        symbol2 = self.request.query_params.get('symbol2', '')
         return BarSpreadBinans.objects.filter(symbol__symbol1=symbol1, symbol__symbol2=symbol2)
 
 

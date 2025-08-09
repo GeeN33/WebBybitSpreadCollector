@@ -7,5 +7,5 @@ class GetBarSpreadListAPIView(ListAPIView):
     serializer_class = BarSpreadSerializer
 
     def get_queryset(self):
-        symbol = self.kwargs.get('symbol')
+        symbol = self.request.query_params.get('symbol', '')
         return BarSpread.objects.filter(symbol__symbol=symbol)
