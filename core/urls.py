@@ -11,6 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('collector/', include('collector.urls')),
     path('binans/', include('binans.urls')),
+    path('gateio/', include('gateio.urls')),
 ]
 
 if settings.DEBUG:

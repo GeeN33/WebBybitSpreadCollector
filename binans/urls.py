@@ -4,6 +4,6 @@ from binans.views import GetBinansBarSpreadListAPIView, GetInstrumentBinansListA
 
 urlpatterns = [
     path('collector/barspread/list/', GetBinansBarSpreadListAPIView.as_view(), name='binans-barspread-list'),
-    path('instrument/list/', GetInstrumentBinansListAPIView.as_view(), name='instrument-list'),
+    path('instrument/list/', GetInstrumentBinansListAPIView.as_view(), name='binans-instrument-list'),
 ]
 
