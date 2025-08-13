@@ -52,6 +52,9 @@ def upDataBarSpread(instrument: InstrumentBinans, jsonPrices:List) -> bool:
     if  askPrice1 == 0 or bidPrice1 == 0 or askPrice2 == 0 or bidPrice2 == 0:
         return True
 
+    last1 = (askPrice1 + bidPrice1) / 2
+    last2 = (askPrice2 + bidPrice2) / 2
+
     bar = BarSpreadBinans.objects.filter(symbol_id=instrument.id).last()
 
     if bar:
@@ -65,7 +68,9 @@ def upDataBarSpread(instrument: InstrumentBinans, jsonPrices:List) -> bool:
                                      open=open,
                                      high=low,
                                      low=high,
-                                     close=open)
+                                     close=open,
+                                     last1=last1,
+                                     last2=last2)
         else:
             close = ((askPrice1 - bidPrice2) + (bidPrice1 - askPrice2)) / 2
             low = askPrice1 - bidPrice2
@@ -76,6 +81,9 @@ def upDataBarSpread(instrument: InstrumentBinans, jsonPrices:List) -> bool:
 
             if bar.low > low:
                 bar.low = low
+
+            bar.last1 = last1
+            bar.last2 = last2
 
             bar.save()
 

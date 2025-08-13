@@ -13,6 +13,8 @@ class BarSpreadBinans(models.Model):
     high = models.FloatField()
     low = models.FloatField()
     close = models.FloatField()
+    last1 = models.FloatField(default=0, null=True)
+    last2 = models.FloatField(default=0, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

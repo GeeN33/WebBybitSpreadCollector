@@ -164,6 +164,9 @@ def upDataBarSpreadGateioItem(base_symbol:str):
             ask = ask1 - bid2
             bid = bid1 - ask2
 
+            last1 = (ask1 + bid1) / 2
+            last2 = (ask2 + bid2) / 2
+
             bar = BarSpreadGateio.objects.filter(symbol_id=pair.id).last()
             if bar:
                 if now - bar.created_at >= timedelta(hours=1):
@@ -173,7 +176,9 @@ def upDataBarSpreadGateioItem(base_symbol:str):
                                              open=open,
                                              high=bid,
                                              low=ask,
-                                             close=open)
+                                             close=open,
+                                             last1=last1,
+                                            last2=last2)
                 else:
                     bar.close = (ask + bid) / 2
                     if bar.high < bid:
@@ -181,6 +186,9 @@ def upDataBarSpreadGateioItem(base_symbol:str):
 
                     if bar.low > ask:
                         bar.low = ask
+
+                    bar.last1 = last1
+                    bar.last2 = last2
 
                     bar.save()
             else:
