@@ -10,7 +10,7 @@ class GetBinansBarSpreadListAPIView(ListAPIView):
     def get_queryset(self):
         symbol1 = self.request.query_params.get('symbol1', '')
         symbol2 = self.request.query_params.get('symbol2', '')
-        return BarSpreadBinans.objects.filter(symbol__symbol1=symbol1, symbol__symbol2=symbol2)
+        return BarSpreadBinans.objects.filter(symbol__symbol1=symbol1, symbol__symbol2=symbol2).order_by('updated_at')
 
 
 class GetInstrumentBinansListAPIView(ListAPIView):
