@@ -21,4 +21,5 @@ class GetInstrumentBinansListAPIView(ListAPIView):
 
 
 # http://localhost:8535/binans/instrument/list/
-# http://localhost:8535/binans/collector/barspread/list/BTCUSDT_250926/BTCUSDT/
+# http://localhost:8535/binans/collector/barspread/list/?format=json&symbol1=BTCUSDT_250627&symbol2=BTCUSDT
+# http://147.45.212.47:8535/binans/collector/barspread/list/?format=json&symbol1=BTCUSDT_250627&symbol2=BTCUSDT
