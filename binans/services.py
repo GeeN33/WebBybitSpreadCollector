@@ -55,7 +55,7 @@ def upDataBarSpread(instrument: InstrumentBinans, jsonPrices:List) -> bool:
     last1 = (askPrice1 + bidPrice1) / 2
     last2 = (askPrice2 + bidPrice2) / 2
 
-    bar = BarSpreadBinans.objects.filter(symbol_id=instrument.id).last()
+    bar = BarSpreadBinans.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
 
     if bar:
         # print(now , bar.updated_at, timedelta(hours=1))

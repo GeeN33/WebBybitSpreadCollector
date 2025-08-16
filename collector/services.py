@@ -1,9 +1,12 @@
 from datetime import datetime, timezone, timedelta
 from time import sleep
-from typing import List, Dict
+from typing import List, Dict, Union
 
 import requests
+from django.db.models import QuerySet
+
 from collector.models import Instrument, BarSpread
+from collector.utils import timestampToDate
 
 
 def getInstruments()-> List:
@@ -103,7 +106,7 @@ def upDataBarSpread(instrument:Instrument)->bool:
         instrument.save()
         return False
 
-    bar = BarSpread.objects.filter(symbol_id=instrument.id).last()
+    bar = BarSpread.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
 
     if bar:
         # print(now , bar.updated_at, timedelta(hours=1))
@@ -153,3 +156,90 @@ def upDataBarSpreadStart():
 
 
     return 'Up data Ok'
+
+def getPricePERP(symbol)->float:
+
+    API_URL = f"https://api.bybit.com/v5/market/tickers?category=inverse&symbol={symbol}"
+
+    try:
+
+        response = requests.get(API_URL)
+        response.raise_for_status()
+        response.json()
+
+        # Получаем JSON-данные
+        data = response.json()
+
+        # Извлекаем необходимые значения
+        # Извлекаем необходимые значения
+        if data['retCode'] == 0 and 'list' in data['result'] and 'time' in data:
+            # Предполагаем, что интересующая нас информация в первом элементе списка
+            ticker_info = data['result']['list'][0]
+            lastPrice = float(ticker_info.get('lastPrice', 0))
+
+            return lastPrice
+        else:
+            return 0
+    except Exception as e:
+         print('Ошибка при загрузке страницы: ' + str(e))
+         return 0
+
+def getFunding(symbol)-> float:
+
+    API_URL = f"https://api.bybit.com/v5/market/funding/history?category=linear&symbol={symbol}PERP&limit=3"
+    try:
+
+        response = requests.get(API_URL)
+        response.raise_for_status()
+        response.json()
+
+        fundings = response.json().get('result', {}).get('list', [])
+        sam = 0
+
+        for funding in fundings:
+            sam += float(funding.get('fundingRate', 0))
+
+        return sam
+
+    except Exception as e:
+        print('Ошибка при загрузке страницы: ' + str(e))
+        return 0
+
+def upDataFundingItem(base_symbol:str, instruments: Union[QuerySet, List[Instrument]]):
+
+    dateNew = datetime.utcnow()
+
+    funding = getFunding(base_symbol)
+    sleep(1)
+    price = getPricePERP(base_symbol + 'USDT')
+
+    instruments = instruments.filter(contract_type='PerpBasis', base_coin=base_symbol)
+    for instrument in instruments:
+        difference = timestampToDate(instrument.delivery_time) - dateNew
+        days_between = difference.days
+        priceAll = price * funding * days_between
+        sleep(0.1)
+        bar = BarSpread.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
+        if bar:
+            bar.funding = priceAll
+            bar.save()
+            # print(instrument.symbol, difference, priceAll)
+
+def upDataFundingStart():
+    instruments = Instrument.objects.filter(is_active=True)
+    instrumentNameList = instruments.values_list('base_coin', flat=True).distinct()
+
+    for instrumentName in instrumentNameList:
+        sleep(1)
+        upDataFundingItem(instrumentName, instruments)
+
+    return 'Up Data Funding Ok'
+
+    # # Ваша метка времени в миллисекундах
+    # timestamp_ms = 1782457200000
+    #
+    # date_time = timestampToDate(timestamp_ms)
+    #
+    # print(date_time.strftime('%Y-%m-%d %H:%M:%S'))
+
+

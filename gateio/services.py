@@ -167,7 +167,7 @@ def upDataBarSpreadGateioItem(base_symbol:str):
             last1 = (ask1 + bid1) / 2
             last2 = (ask2 + bid2) / 2
 
-            bar = BarSpreadGateio.objects.filter(symbol_id=pair.id).last()
+            bar = BarSpreadGateio.objects.filter(symbol_id=pair.id).order_by('updated_at').last()
             if bar:
                 if now - bar.created_at >= timedelta(hours=1):
                     open = (ask + bid) / 2
