@@ -117,6 +117,9 @@ def upDataBarSpread(instrument:Instrument)->bool:
                                         open = open,
                                         high = jsonPrices['bidPrice'],
                                         low = jsonPrices['askPrice'],
+                                        funding = bar.funding,
+                                        fair1 = bar.fair1,
+                                        fair2 = bar.fair2,
                                         close =open)
         else:
           bar.close = (jsonPrices['askPrice'] + jsonPrices['bidPrice']) / 2
