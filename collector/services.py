@@ -114,12 +114,14 @@ def upDataBarSpread(instrument:Instrument)->bool:
     # print(instrument.symbol)
     jsonPrices = getPrice(instrument.symbol)
     # print(jsonPrices)
-    if jsonPrices:
+
+    if jsonPrices and 'askPrice' in  jsonPrices and 'bidPrice' in  jsonPrices:
         sleep(1)
     else:
         instrument.is_updata = True
         instrument.save()
         sleep(10)
+
 
     bar = BarSpread.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
 
