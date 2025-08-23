@@ -121,6 +121,7 @@ def upDataBarSpread(instrument:Instrument)->bool:
         instrument.is_updata = True
         instrument.save()
         sleep(10)
+        return True
 
 
     bar = BarSpread.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
