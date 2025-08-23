@@ -70,25 +70,39 @@ def getPrice(symbol)->Dict:
 
         # Получаем JSON-данные
         data = response.json()
-
+        # print(data)
         # Извлекаем необходимые значения
         # Извлекаем необходимые значения
         if data['retCode'] == 0 and 'list' in data['result'] and 'time' in data:
             # Предполагаем, что интересующая нас информация в первом элементе списка
-            ticker_info = data['result']['list'][0]
-            bidPrice = float(ticker_info.get('bidPrice', 0))
-            bidSize = float(ticker_info.get('bidSize', 0))
-            askPrice = float(ticker_info.get('askPrice', 0))
-            askSize = float(ticker_info.get('askSize', 0))
-            # lastPrice = float(ticker_info.get('lastPrice', 0))
+            bidPrice = None
+            askPrice = None
+            lastPrice = None
 
-            return {
-                'bidPrice': bidPrice,
-                'bidSize': bidSize,
-                'askPrice': askPrice,
-                'askSize': askSize,
-                 # 'lastPrice': lastPrice,
-            }
+            ticker_info = data['result']['list'][0]
+            if ticker_info.get('bidPrice'):
+                bidPrice = float(ticker_info.get('bidPrice', 0))
+            if ticker_info.get('askPrice'):
+              askPrice = float(ticker_info.get('askPrice', 0))
+
+            if ticker_info.get('lastPrice'):
+               lastPrice = float(ticker_info.get('lastPrice', 0))
+
+            if bidPrice == None:
+                if lastPrice:
+                    bidPrice = lastPrice
+
+            if askPrice == None:
+                if lastPrice:
+                    askPrice = lastPrice
+
+            if bidPrice and askPrice:
+                return {
+                    'bidPrice': bidPrice,
+                    'askPrice': askPrice,
+                }
+            else:
+                return {}
         else:
             return {}
     except Exception as e:
@@ -99,12 +113,13 @@ def upDataBarSpread(instrument:Instrument)->bool:
     now = datetime.now(timezone.utc)
     # print(instrument.symbol)
     jsonPrices = getPrice(instrument.symbol)
+    # print(jsonPrices)
     if jsonPrices:
         sleep(1)
     else:
         instrument.is_updata = True
         instrument.save()
-        return False
+        sleep(10)
 
     bar = BarSpread.objects.filter(symbol_id=instrument.id).order_by('updated_at').last()
 
