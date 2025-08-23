@@ -105,16 +105,17 @@ def upDataBarSpread(instrument: InstrumentBinans, jsonPrices:List) -> bool:
 
 def upDataBarSpreadBinansStart():
     jsonPrices = getPrices()
-
+    # print(len(jsonPrices))
     if len(jsonPrices) == 0: return 'Not data'
 
     instruments = InstrumentBinans.objects.filter(is_active=True)
-    if instruments.filter(is_updata=False).exists():
-        instruments = instruments.filter(is_updata=False)
-    else:
-        instruments.update(is_updata=False)
+    # if instruments.filter(is_updata=False).exists():
+    #     instruments = instruments.filter(is_updata=False)
+    # else:
+    #     instruments.update(is_updata=False)
 
     for instrument in instruments:
+        # print(instrument.symbol1, instrument.symbol2)
         if upDataBarSpread(instrument, jsonPrices) == False:
             return 'Up data Break'
 

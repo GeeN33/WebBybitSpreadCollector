@@ -7,4 +7,5 @@ class Command(BaseCommand):
     help = 'upDataBarspreadBinansstart'
 
     def handle(self, *args, **options):
-        upDataBarSpreadBinansStart()
+       res = upDataBarSpreadBinansStart()
+       print(res)
