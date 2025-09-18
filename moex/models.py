@@ -43,6 +43,7 @@ class BollingerLevel(models.Model):
     level_type = models.CharField(help_text="bollinger type", max_length=30, choices=CHOICES_TYPE)
     level_price = models.FloatField(default=0, null=True, blank=True)
     normal_price = models.FloatField(default=0, null=True, blank=True)
+    level_side = models.CharField(max_length=100, default='', null=True, blank=True)
 
     order_id = models.CharField(max_length=100, default='', null=True, blank=True)
     status = models.CharField(max_length=100, default='', null=True, blank=True)
@@ -54,7 +55,7 @@ class BollingerLevel(models.Model):
         return (f'{self.level_id} | {self.level_high} | {self.level_low}'
                 f' *** {self.bot.name} {self.level_type} {self.period} {self.deviation}'
                 f' {self.level_price} *** {self.normal_price} *** {self.level_stop_low} _ {self.level_stop_high} ***'
-                f' {self.normal_price} {self.quantity} {self.side}')
+                f' {self.normal_price} {self.quantity} {self.level_side}')
 
     class Meta:
         ordering = ('level_id',)
