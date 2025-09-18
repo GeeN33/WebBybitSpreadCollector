@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'collector',
     'binans',
     'gateio',
+    'moex',
 ]
 
 MIDDLEWARE = [
