@@ -47,6 +47,7 @@ class BollingerLevel(models.Model):
 
     order_id = models.CharField(max_length=100, default='', null=True, blank=True)
     status = models.CharField(max_length=100, default='', null=True, blank=True)
+    order_type = models.CharField(max_length=100, default='', null=True, blank=True)
     side = models.CharField(max_length=100, default='', null=True, blank=True)
     limit_price = models.FloatField(default=0, null=True, blank=True)
     quantity = models.FloatField(default=0, null=True, blank=True)
