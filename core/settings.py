@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'binans',
     'gateio',
     'moex',
+    'moex_bonds',
+    'moex_grid',
 ]
 
 MIDDLEWARE = [
