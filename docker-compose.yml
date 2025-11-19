@@ -16,7 +16,8 @@ services:
     build: .
     container_name: celery-beat
     restart: always
-    command: celery -A core beat -l CRITICAL
+    command: celery -A core beat -l info
+#    command: celery -A core beat -l CRITICAL
     volumes:
       - .:/usr/src/app/
     depends_on:
@@ -30,8 +31,8 @@ services:
     build: .
     container_name: celery-worker
     restart: always
-    command: celery -A core worker -l CRITICAL -c 10
-    #    command: celery -A core worker -l info
+#    command: celery -A core worker -l CRITICAL -c 10
+    command: celery -A core worker -l info
     volumes:
       - .:/usr/src/app/
     depends_on:
