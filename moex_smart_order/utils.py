@@ -1,6 +1,15 @@
 from datetime import datetime, time, timedelta
 import pytz
 
+def round_price(price, step):
+
+    remainder = int(price / step)
+
+    rounded_price = remainder * step
+
+    size = len(str(step).split('.')[-1])
+
+    return round(rounded_price, size)
 
 def is_within_schedule():
     # Устанавливаем часовой пояс для Москвы

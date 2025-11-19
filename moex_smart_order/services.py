@@ -1,9 +1,8 @@
 from time import sleep
 
-from moex.utils import filter_order, round_price
 from moex_smart_order.lib.bot import Bot
 from moex_smart_order.models import OrderSmart
-from moex_smart_order.utils import is_within_schedule
+from moex_smart_order.utils import is_within_schedule, round_price
 
 
 # python manage.py start_bot_smart_test
