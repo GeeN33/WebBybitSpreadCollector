@@ -1,5 +1,13 @@
 from django.db import models
 
+class BotAuth(models.Model):
+    account_id = models.CharField(max_length=100)
+    secret_key = models.TextField()
+    jwt_token = models.TextField()
+
+    def __str__(self):
+        return self.account_id
+
 
 class BotSpreadBollinger(models.Model):
     CHOICES_SIDE = (
